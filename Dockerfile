@@ -14,6 +14,7 @@ COPY ./scripts/* ${scripts_dir}
 RUN apt-get update \
     && export DEBIAN_FRONTEND=noninteractive \
     && ${scripts_dir}/common-debian.sh "false" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" \
+    && /opt/conda/bin/conda env update -f ${scripts_dir}conda_environment.yml \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* ${scripts_dir}
