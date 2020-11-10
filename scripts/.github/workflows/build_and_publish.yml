@@ -1,0 +1,54 @@
+name: Build and Publish
+
+#
+# This workflow provides a continuous delivery workflow for the default branch on the repository.
+#
+# Upon successful building of the containers a deployment requet will be created triggering the
+# associated workflows for deploying.
+#
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build and Publish
+    runs-on: ubuntu-20.04
+
+    env:
+      CONTAINER_TAG: ghcr.io/octodemo-db/github-pyml-development-container:latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Docker build
+        id: docker_build
+        run: |
+          docker build . --tag ${CONTAINER_TAG}
+        shell: bash
+
+      # Publish the container if we successful
+      - name: Sign in to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.OCTODEMOBOT_GHPR_TOKEN }}
+          registry: ghcr.io
+      
+      - name: Publish Container image
+        id: container_publish
+        run: |
+          docker push ${CONTAINER_TAG}
+        shell: bash
+
+      - name: Publish App Container as a Status
+        id: container_image_status
+        uses: Sibz/github-status-action@v1
+        with:
+          authToken: ${{ secrets.GITHUB_TOKEN }}
+          state: success
+          context: Container Image Published
+          description: ${CONTAINER_TAG}
