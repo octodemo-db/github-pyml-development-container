@@ -1,6 +1,9 @@
 FROM continuumio/miniconda3
 
 ARG scripts_dir=/tmp/scripts/
+ARG image_url=https://github.com/octodemo-db/github-pyml-development-container
+ARG version=1
+ARG revision=unknown
 
 # [Option] Upgrade OS packages to their latest versions
 ARG UPGRADE_PACKAGES="true"
@@ -20,3 +23,14 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* ${scripts_dir}
 
 USER vscode
+
+LABEL org.opencontainers.image.authors GitHub Solutions Engineering
+LABEL org.opencontainers.image.url $image_url
+LABEL org.opencontainers.image.documentation $image_url/README.md
+LABEL org.opencontainers.image.source $image_url
+LABEL org.opencontainers.image.version $version
+LABEL org.opencontainers.image.revision $revision
+LABEL org.opencontainers.image.vendor GitHub
+LABEL org.opencontainers.image.licenses MIT
+LABEL org.opencontainers.image.title GitHub Solutions Engineering Codespaces container for Python ML
+LABEL org.opencontainers.image.description Container for Python ML in GitHub Codespaces
