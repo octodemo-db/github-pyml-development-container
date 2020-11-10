@@ -6,3 +6,5 @@ dependencies:
   - tensorflow
   - keras
   - ipykernel
+  - pandas
+  - numpy
